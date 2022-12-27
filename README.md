@@ -2,10 +2,12 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/bep/gojap)](https://goreportcard.com/report/github.com/bep/gojap)
 [![GoDoc](https://godoc.org/github.com/bep/gojap?status.svg)](https://godoc.org/github.com/bep/gojap)
 
+- [Baseline benchmarks with new VM per execution and no compile cache](#baseline-benchmarks-with-new-vm-per-execution-and-no-compile-cache)
+- [Benchmarks using a compilation cache and VM pool](#benchmarks-using-a-compilation-cache-and-vm-pool)
 
 This is a small library that wraps [goja](https://github.com/dop251/goja/) and adds a VM pool and compilation cache. The primary intended use case for this is fast execution of a small set of small JavaScript programs with lots of different data contexts.
 
-Baseline benchmarks (new VM per execution, no compile cache): 
+## Baseline benchmarks with new VM per execution and no compile cache
 
 ```
 Benchmark branch "main"
@@ -50,7 +52,7 @@ RunString/big_script/Baseline/serial-10    5.22k ± 0%
 RunString/big_script/Baseline/parallel-10  5.22k ± 0%
 ```
 
-The same benchmarks with a compilation cache and VM pool:
+## Benchmarks using a compilation cache and VM pool
 
 ```
  go version go1.19.3 darwin/arm64
