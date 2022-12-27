@@ -33,6 +33,7 @@ type Exec struct {
 	pcacheMu sync.RWMutex
 }
 
+// Arg is a named argument to be passed to RunString.
 type Arg struct {
 	Name  string
 	Value any
@@ -40,6 +41,11 @@ type Arg struct {
 
 // RunString compiles and runs the given string s as a JavaScript program.
 // Note that the compiled program is cached using the string s as the key.
+//
+// We reuse VMs across exeuctions. The script in s is compiled in strict mode, but
+// other than that it's currerntly the caller's responsibility to ensure that the script is
+// not binding any global variables, e.g. by making sure that it's wrapped in a
+// function.
 func (e *Exec) RunString(s string, args ...Arg) (goja.Value, error) {
 	e.pcacheMu.RLock()
 	p, ok := e.pcache[s]

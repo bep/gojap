@@ -14,6 +14,7 @@ func TestRunString(t *testing.T) {
 	c := qt.New(t)
 	e := New()
 	c.Assert(e.MustRunString("2 + 2").ToInteger(), qt.Equals, int64(4))
+	c.Assert(e.MustRunString("(function () { return 2 + 2 })();").ToInteger(), qt.Equals, int64(4))
 	c.Assert(e.MustRunString("2 + 2 + k", Arg{"k", 32}).ToInteger(), qt.Equals, int64(36))
 }
 
