@@ -1,4 +1,4 @@
-package golibtemplate
+package gojap
 
 import (
 	"testing"
@@ -6,7 +6,13 @@ import (
 	qt "github.com/frankban/quicktest"
 )
 
-func TestFoo(t *testing.T) {
+func TestRunString(t *testing.T) {
 	c := qt.New(t)
-	c.Assert(Foo(), qt.Equals, "foo")
+	c.Assert(MustRunString("2 + 2").ToInteger(), qt.Equals, int64(4))
+}
+
+func BenchmarkRunString(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		MustRunString("2 + 2")
+	}
 }
