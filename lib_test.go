@@ -13,8 +13,10 @@ func TestRunString(t *testing.T) {
 }
 
 func BenchmarkRunString(b *testing.B) {
-	e := New()
-	for i := 0; i < b.N; i++ {
-		e.MustRunString("2 + 2")
-	}
+	b.Run("no args", func(b *testing.B) {
+		e := New()
+		for i := 0; i < b.N; i++ {
+			e.MustRunString("2 + 2")
+		}
+	})
 }
