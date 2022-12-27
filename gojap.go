@@ -33,10 +33,14 @@ type Exec struct {
 	pcacheMu sync.RWMutex
 }
 
-// RunStringc compiles and runs the given string s as a JavaScript program.
-// Note that the compiled program is cached, so any script needs to
-// is compiled using strict mode to prevent global pollution.
-func (e *Exec) RunString(s string) (goja.Value, error) {
+type Arg struct {
+	Name  string
+	Value any
+}
+
+// RunString compiles and runs the given string s as a JavaScript program.
+// Note that the compiled program is cached using the string s as the key.
+func (e *Exec) RunString(s string, args ...Arg) (goja.Value, error) {
 	e.pcacheMu.RLock()
 	p, ok := e.pcache[s]
 	e.pcacheMu.RUnlock()
@@ -52,12 +56,24 @@ func (e *Exec) RunString(s string) (goja.Value, error) {
 	}
 
 	vm := getVm()
-	defer putVm(vm)
+	defer func() {
+		for _, arg := range args {
+			vm.GlobalObject().Delete(arg.Name)
+		}
+		putVm(vm)
+	}()
+
+	for _, arg := range args {
+		if err := vm.Set(arg.Name, arg.Value); err != nil {
+			return nil, err
+		}
+	}
+
 	return vm.RunProgram(p)
 }
 
-func (e *Exec) MustRunString(s string) goja.Value {
-	v, err := e.RunString(s)
+func (e *Exec) MustRunString(s string, args ...Arg) goja.Value {
+	v, err := e.RunString(s, args...)
 	if err != nil {
 		panic(err)
 	}
