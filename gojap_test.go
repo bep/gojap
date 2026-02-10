@@ -23,7 +23,7 @@ func TestRunStringParallel(t *testing.T) {
 	e := New()
 
 	wg := sync.WaitGroup{}
-	for i := 0; i < 20; i++ {
+	for i := range 20 {
 		wg.Add(1)
 		i := i
 		go func() {
