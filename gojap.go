@@ -7,7 +7,7 @@ import (
 )
 
 var vmPool = sync.Pool{
-	New: func() interface{} {
+	New: func() any {
 		return goja.New()
 	},
 }
